@@ -3,133 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online Courses</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf_viewer.min.css">
+    <title>Premium Courses</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
     <style>
-        /* Basic CSS */
-        body {
-            font-family: Arial, sans-serif;
+        /* Reset and Base Styles */
+        * {
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
         }
 
-        .course-list {
+        /* Header Styles */
+        .header {
+            background: #1a1a1a;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 30px;
+            font-size: 16px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+                        url('https://via.placeholder.com/1920x600') center/cover;
+            padding: 100px 50px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        /* Course Grid */
+        .course-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 50px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .course-card {
             border: 1px solid #ddd;
-            padding: 20px;
-            border-radius: 8px;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s;
         }
 
-        .pdf-viewer-container {
-            margin-top: 40px;
-            border: 1px solid #ddd;
+        .course-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .course-image {
+            height: 200px;
+            background: #ddd;
+            position: relative;
+        }
+
+        .course-info {
             padding: 20px;
-            height: 600px;
-            overflow: auto;
+        }
+
+        .price {
+            color: #27ae60;
+            font-size: 24px;
+            margin: 15px 0;
         }
 
         .buy-button {
-            background: #6772e5;
+            background: #27ae60;
             color: white;
-            padding: 10px 20px;
+            padding: 12px 30px;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        /* PDF Viewer Section */
+        .pdf-section {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 50px;
+        }
+
+        .pdf-container {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            height: 600px;
+            overflow: hidden;
+        }
+
+        #pdf-viewer {
+            width: 100%;
+            height: 100%;
+        }
+
+        .download-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 30px;
+            background: #2980b9;
+            color: white;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Online Courses</h1>
+    <header class="header">
+        <div class="logo">Course Academy</div>
+        <nav class="nav-links">
+            <a href="#courses">Courses</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+        </nav>
     </header>
 
-    <div class="course-list">
-        <!-- Course cards will be populated by JavaScript -->
+    <section class="hero">
+        <h1>Transform Your Career</h1>
+        <p>Premium Courses with Expert Guidance</p>
+    </section>
+
+    <div id="courses" class="course-grid">
+        <!-- Courses will be populated by JavaScript -->
     </div>
 
-    <div class="pdf-viewer-container">
+    <section class="pdf-section">
         <h2>Course Preview</h2>
-        <div id="pdf-viewer"></div>
-        <button id="download-pdf" style="margin-top: 20px;">Download PDF</button>
-    </div>
-
-    <!-- PDF.js Dependencies -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
-    
-    <!-- Stripe -->
-    <script src="https://js.stripe.com/v3/"></script>
+        <div class="pdf-container">
+            <div id="pdf-viewer"></div>
+        </div>
+        <button class="download-btn" onclick="downloadPDF()">Download Curriculum</button>
+    </section>
 
     <script>
         // Stripe Configuration
-        const stripe = Stripe('pk_test_your_stripe_public_key_here');
+        const stripe = Stripe('pk_test_your_stripe_key_here');
         
-        // Sample Course Data
+        // Course Data
         const courses = [
             {
-                id: 'price_1YourPriceID1',
-                title: 'Web Development Basics',
-                price: 49.99,
-                pdfUrl: '/path/to/your-course.pdf'
+                id: 'price_1YourPriceID',
+                title: 'Digital Marketing Mastery',
+                price: 100,
+                pdf: '/assets/marketing-course.pdf',
+                image: 'https://via.placeholder.com/300x200'
             },
-            // Add more courses as needed
+            {
+                id: 'price_1YourPriceID2',
+                title: 'Advanced Sales Training',
+                price: 200,
+                pdf: '/assets/sales-course.pdf',
+                image: 'https://via.placeholder.com/300x200'
+            }
         ];
 
-        // Initialize Course List
+        // Initialize Courses
         document.addEventListener('DOMContentLoaded', () => {
-            const courseList = document.querySelector('.course-list');
+            const courseGrid = document.querySelector('.course-grid');
             
             courses.forEach(course => {
                 const card = document.createElement('div');
                 card.className = 'course-card';
                 card.innerHTML = `
-                    <h3>${course.title}</h3>
-                    <p>$${course.price}</p>
-                    <button class="buy-button" data-price="${course.id}">Buy Now</button>
+                    <div class="course-image">
+                        <img src="${course.image}" alt="${course.title}" style="width:100%;height:100%;object-fit:cover;">
+                    </div>
+                    <div class="course-info">
+                        <h3>${course.title}</h3>
+                        <div class="price">$${course.price}</div>
+                        <button class="buy-button" data-id="${course.id}">Enroll Now</button>
+                    </div>
                 `;
-                courseList.appendChild(card);
+                courseGrid.appendChild(card);
             });
 
-            // Initialize PDF Viewer
-            const pdfViewer = document.getElementById('pdf-viewer');
-            const pdfUrl = courses[0].pdfUrl; // Default to first course PDF
-            
-            pdfjsLib.getDocument(pdfUrl).promise.then(pdf => {
-                // Show first page
-                pdf.getPage(1).then(page => {
-                    const scale = 1.5;
-                    const viewport = page.getViewport({ scale });
-                    const canvas = document.createElement('canvas');
-                    const context = canvas.getContext('2d');
-                    canvas.height = viewport.height;
-                    canvas.width = viewport.width;
-                    
-                    const renderContext = {
-                        canvasContext: context,
-                        viewport: viewport
-                    };
-                    
-                    page.render(renderContext);
-                    pdfViewer.appendChild(canvas);
-                });
-            });
+            // Initialize PDF Viewer for first course
+            loadPDF(courses[0].pdf);
 
-            // Download PDF Button
-            document.getElementById('download-pdf').addEventListener('click', () => {
-                const link = document.createElement('a');
-                link.href = pdfUrl;
-                link.download = 'course-material.pdf';
-                link.click();
-            });
-
-            // Stripe Checkout Handlers
+            // Stripe Handlers
             document.querySelectorAll('.buy-button').forEach(button => {
                 button.addEventListener('click', async (e) => {
-                    const priceId = e.target.dataset.price;
+                    const priceId = e.target.dataset.id;
+                    const course = courses.find(c => c.id === priceId);
                     
                     try {
                         const { error } = await stripe.redirectToCheckout({
@@ -138,16 +215,52 @@
                             successUrl: `${window.location.origin}/success.html`,
                             cancelUrl: `${window.location.origin}/cancel.html`,
                         });
-                        
-                        if (error) {
-                            alert(error.message);
-                        }
+
+                        if (error) throw error;
                     } catch (err) {
-                        console.error('Error:', err);
+                        console.error('Checkout Error:', err);
+                        alert('Payment failed. Please try again.');
                     }
                 });
             });
         });
+
+        // PDF Handling
+        async function loadPDF(url) {
+            const container = document.getElementById('pdf-viewer');
+            container.innerHTML = '<div class="loading">Loading PDF...</div>';
+            
+            try {
+                const pdf = await pdfjsLib.getDocument(url).promise;
+                container.innerHTML = '';
+                
+                // Show first 3 pages for preview
+                for (let pageNum = 1; pageNum <= Math.min(3, pdf.numPages); pageNum++) {
+                    const page = await pdf.getPage(pageNum);
+                    const scale = 1.5;
+                    const viewport = page.getViewport({ scale });
+                    
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+                    
+                    await page.render({ canvasContext: context, viewport }).promise;
+                    container.appendChild(canvas);
+                }
+            } catch (error) {
+                container.innerHTML = 'Error loading PDF preview';
+                console.error('PDF Error:', error);
+            }
+        }
+
+        function downloadPDF() {
+            const currentPDF = courses[0].pdf; // Update this logic for multiple courses
+            const link = document.createElement('a');
+            link.href = currentPDF;
+            link.download = 'course-material.pdf';
+            link.click();
+        }
     </script>
 </body>
 </html>

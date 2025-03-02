@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Courses</title>
+    <title>Premium Online Courses</title>
     <script src="https://js.stripe.com/v3/"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         /* Reset and Base Styles */
         * {
@@ -15,56 +16,75 @@
             font-family: 'Arial', sans-serif;
         }
 
+        body {
+            background: #f8f9fa;
+        }
+
         /* Header Styles */
         .header {
             background: #1a1a1a;
-            padding: 20px 50px;
+            padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
         .logo {
             color: white;
-            font-size: 28px;
+            font-size: 1.8rem;
             font-weight: bold;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
         }
 
         .nav-links a {
             color: white;
             text-decoration: none;
-            margin-left: 30px;
-            font-size: 16px;
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #27ae60;
         }
 
         /* Hero Section */
         .hero {
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
-                        url('https://via.placeholder.com/1920x600') center/cover;
-            padding: 100px 50px;
+            background: linear-gradient(45deg, #2c3e50, #27ae60);
+            padding: 6rem 2rem;
             text-align: center;
             color: white;
         }
 
         .hero h1 {
-            font-size: 48px;
-            margin-bottom: 20px;
+            font-size: 3rem;
+            margin-bottom: 1rem;
         }
 
-        /* Course Grid */
+        /* Courses Section */
+        .courses-container {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
         .course-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            padding: 50px;
-            max-width: 1200px;
-            margin: 0 auto;
+            gap: 2rem;
+            margin-top: 2rem;
         }
 
         .course-card {
-            border: 1px solid #ddd;
+            background: white;
             border-radius: 10px;
             overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             transition: transform 0.3s;
         }
 
@@ -76,86 +96,156 @@
             height: 200px;
             background: #ddd;
             position: relative;
+            overflow: hidden;
+        }
+
+        .course-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .course-info {
-            padding: 20px;
+            padding: 1.5rem;
         }
 
-        .price {
+        .course-price {
             color: #27ae60;
-            font-size: 24px;
-            margin: 15px 0;
+            font-size: 1.5rem;
+            margin: 1rem 0;
+            font-weight: bold;
         }
 
         .buy-button {
             background: #27ae60;
             color: white;
-            padding: 12px 30px;
+            padding: 0.8rem 1.5rem;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             width: 100%;
-            font-size: 16px;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+
+        .buy-button:hover {
+            background: #219a52;
         }
 
         /* PDF Viewer Section */
         .pdf-section {
-            max-width: 1200px;
-            margin: 50px auto;
-            padding: 0 50px;
+            background: white;
+            padding: 3rem 2rem;
+            margin: 4rem 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
         }
 
         .pdf-container {
-            border: 1px solid #ddd;
+            max-width: 1200px;
+            margin: 0 auto;
+            border: 1px solid #e0e0e0;
             border-radius: 10px;
-            height: 600px;
             overflow: hidden;
+            height: 80vh;
+            position: relative;
         }
 
         #pdf-viewer {
             width: 100%;
             height: 100%;
+            border: none;
+        }
+
+        .pdf-controls {
+            text-align: center;
+            margin-top: 1.5rem;
         }
 
         .download-btn {
-            display: block;
-            margin: 20px auto;
-            padding: 12px 30px;
             background: #2980b9;
             color: white;
+            padding: 0.8rem 1.5rem;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+
+        .download-btn:hover {
+            background: #2471a3;
+        }
+
+        /* Footer */
+        .footer {
+            background: #1a1a1a;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .pdf-container {
+                height: 60vh;
+            }
         }
     </style>
 </head>
 <body>
     <header class="header">
-        <div class="logo">Course Academy</div>
+        <a href="#" class="logo">CourseMaster</a>
         <nav class="nav-links">
             <a href="#courses">Courses</a>
-            <a href="#about">About</a>
+            <a href="#preview">Preview</a>
             <a href="#contact">Contact</a>
         </nav>
     </header>
 
     <section class="hero">
         <h1>Transform Your Career</h1>
-        <p>Premium Courses with Expert Guidance</p>
+        <p>Premium Courses with Expert Guidance and Resources</p>
     </section>
 
-    <div id="courses" class="course-grid">
-        <!-- Courses will be populated by JavaScript -->
-    </div>
-
-    <section class="pdf-section">
-        <h2>Course Preview</h2>
-        <div class="pdf-container">
-            <div id="pdf-viewer"></div>
+    <section id="courses" class="courses-container">
+        <h2>Featured Courses</h2>
+        <div class="course-grid">
+            <!-- Courses will be populated by JavaScript -->
         </div>
-        <button class="download-btn" onclick="downloadPDF()">Download Curriculum</button>
     </section>
+
+    <section id="preview" class="pdf-section">
+        <div class="courses-container">
+            <h2>Course Preview</h2>
+            <div class="pdf-container">
+                <iframe 
+                    id="pdf-viewer"
+                    src="/assets/pdfjs/web/viewer.html?file="
+                    frameborder="0">
+                </iframe>
+            </div>
+            <div class="pdf-controls">
+                <button class="download-btn" onclick="downloadPDF()">
+                    <i class="fas fa-download"></i> Download Full Curriculum
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>© 2023 CourseMaster. All rights reserved.</p>
+    </footer>
 
     <script>
         // Stripe Configuration
@@ -167,15 +257,19 @@
                 id: 'price_1YourPriceID',
                 title: 'Digital Marketing Mastery',
                 price: 100,
-                pdf: '/assets/marketing-course.pdf',
-                image: 'https://via.placeholder.com/300x200'
+                pdf: '/assets/pdfs/marketing-course.pdf',
+                image: '/assets/images/marketing-thumb.jpg',
+                pages: 120,
+                lessons: 25
             },
             {
                 id: 'price_1YourPriceID2',
                 title: 'Advanced Sales Training',
-                price: 200,
-                pdf: '/assets/sales-course.pdf',
-                image: 'https://via.placeholder.com/300x200'
+                price: 100,
+                pdf: '/assets/pdfs/sales-course.pdf',
+                image: '/assets/images/sales-thumb.jpg',
+                pages: 150,
+                lessons: 30
             }
         ];
 
@@ -188,19 +282,26 @@
                 card.className = 'course-card';
                 card.innerHTML = `
                     <div class="course-image">
-                        <img src="${course.image}" alt="${course.title}" style="width:100%;height:100%;object-fit:cover;">
+                        <img src="${course.image}" alt="${course.title}">
                     </div>
                     <div class="course-info">
                         <h3>${course.title}</h3>
-                        <div class="price">$${course.price}</div>
-                        <button class="buy-button" data-id="${course.id}">Enroll Now</button>
+                        <div class="course-price">$${course.price}</div>
+                        <div class="course-details">
+                            <p><i class="fas fa-file-alt"></i> ${course.pages} Pages</p>
+                            <p><i class="fas fa-video"></i> ${course.lessons} Lessons</p>
+                        </div>
+                        <button class="buy-button" data-id="${course.id}">
+                            <i class="fas fa-shopping-cart"></i> Enroll Now
+                        </button>
                     </div>
                 `;
                 courseGrid.appendChild(card);
             });
 
             // Initialize PDF Viewer for first course
-            loadPDF(courses[0].pdf);
+            const pdfViewer = document.getElementById('pdf-viewer');
+            pdfViewer.src = `/assets/pdfjs/web/viewer.html?file=${encodeURIComponent(courses[0].pdf)}`;
 
             // Stripe Handlers
             document.querySelectorAll('.buy-button').forEach(button => {
@@ -225,37 +326,8 @@
             });
         });
 
-        // PDF Handling
-        async function loadPDF(url) {
-            const container = document.getElementById('pdf-viewer');
-            container.innerHTML = '<div class="loading">Loading PDF...</div>';
-            
-            try {
-                const pdf = await pdfjsLib.getDocument(url).promise;
-                container.innerHTML = '';
-                
-                // Show first 3 pages for preview
-                for (let pageNum = 1; pageNum <= Math.min(3, pdf.numPages); pageNum++) {
-                    const page = await pdf.getPage(pageNum);
-                    const scale = 1.5;
-                    const viewport = page.getViewport({ scale });
-                    
-                    const canvas = document.createElement('canvas');
-                    const context = canvas.getContext('2d');
-                    canvas.height = viewport.height;
-                    canvas.width = viewport.width;
-                    
-                    await page.render({ canvasContext: context, viewport }).promise;
-                    container.appendChild(canvas);
-                }
-            } catch (error) {
-                container.innerHTML = 'Error loading PDF preview';
-                console.error('PDF Error:', error);
-            }
-        }
-
         function downloadPDF() {
-            const currentPDF = courses[0].pdf; // Update this logic for multiple courses
+            const currentPDF = courses[0].pdf; // Update this for multiple courses
             const link = document.createElement('a');
             link.href = currentPDF;
             link.download = 'course-material.pdf';
